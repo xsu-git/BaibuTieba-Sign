@@ -1,9 +1,12 @@
+import subprocess
+
 import requests
 import re
 import hashlib
 import time
 import json
 from PIL import Image
+import matplotlib.pyplot as plt
 #-*-conding:UTF-8 -*-
 
 class Tieba():
@@ -62,7 +65,7 @@ class Tieba():
             res = requests.post(url=url, data=data, timeout=2).json()
         except Exception:
             return None
-        if 'forum_list' not in returnData:
+        if 'forum_list' not in res :
             returnData['code'] = -1
             returnData['message'] = '未找到关注贴吧'
             returnData['forum_list']['non-gconforum'] = []
@@ -148,8 +151,12 @@ class Tieba():
         if 'gconforum' in datadict['forum_list']:
             for m in datadict['forum_list']['gconforum']:
                 datalist.append(m['name'])
+        #若无关注列表/cookie失效
+        if not datalist:
+            return 1
         for n in datalist:
             self.sign_one(n)
+        return 0
 
 #登录
 def get_bduss():
@@ -167,29 +174,45 @@ def get_bduss():
         f.write(s.get(imgurl).content)
     img = Image.open('qcode.png')
     img.show()
+    time.sleep(15)
+
+    #自动关闭图片
     #等待扫码响应
-    time.sleep(10)
     url2 = 'https://passport.baidu.com/channel/unicast?channel_id={}&callback=&tpl=netdisk&apiver=v3'.format(sign)
     headers2 = {
         'Host': 'passport.baidu.com',
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
     }
     res2 = s.get(url=url2, headers=headers2).text[1:-2]
-    data = json.loads(res2)
-    data = json.loads(data['channel_v'])
-    v = data['v']
-    url3 = 'https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss={}&u=https%253A%252F%252Fpan.baidu.com%252Fdisk%252Fhome&loginVersion=v4&qrcode=1&tpl=netdisk&apiver=v3&traceid=&callback=%27'.format(
-        v)
-    response = s.get(url3)
-    bduss = response.cookies['BDUSS']
-    if bduss is not None:
-        return bduss
-    else:
+    try:
+        data = json.loads(res2)
+        data = json.loads(data['channel_v'])
+        v = data['v']
+        url3 = 'https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss={}&u=https%253A%252F%252Fpan.baidu.com%252Fdisk%252Fhome&loginVersion=v4&qrcode=1&tpl=netdisk&apiver=v3&traceid=&callback=%27'.format(
+            v)
+        response = s.get(url3)
+        bduss = response.cookies['BDUSS']
+        with open('cookie.txt',encoding='utf-8', mode='w+') as f:
+            f.write(bduss)
+    except:
         bduss = ''
-        return bduss
+        print('二维码扫描超时')
+    if bduss is None:
+        bduss = ''
+    return bduss
 
 if __name__ == '__main__':
-    bduss = get_bduss()
-    if bduss:
-        tieba = Tieba(bduss)
-        tieba.main()
+    with open('cookie.txt',encoding='utf-8', mode='r+') as f:
+        bduss = f.read()
+    if not bduss:
+        bduss = get_bduss()
+    tieba = Tieba(bduss)
+    flag = tieba.main()
+    if flag:
+        print('cookie失效')
+        bduss = get_bduss()
+        tieba2 = Tieba(bduss)
+        tieba2.main()
+        print('签到结束')
+    else:
+        print('签到结束')
