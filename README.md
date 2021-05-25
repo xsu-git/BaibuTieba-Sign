@@ -1,5 +1,5 @@
 
-[![](https://img.shields.io/badge/python-3-brightgreen.svg)](https://www.python.org/downloads/)
+[![](https://img.shields.io/badge/python-3.6-brightgreen.svg)](https://www.python.org/downloads/)
 
 
 
@@ -8,15 +8,23 @@
 
 ## 快速开始 :octocat:
 
-1.登录
+1.概述
+   
+`
+    由于百度贴吧官方提供的一键签到目前仅支持7级以上吧。构建灌水小工具对于一些新关注的贴吧
+`
+   
+2.使用
 
-- 运行 tieba_sign.py  
+- 运行 main.py  
  
 
 ```
 使用百度贴吧手机客户端扫描  授权登录 弹出的贴吧登录二维码(15秒内)
 （程序固定二维码停留有效时间15秒）
 （成功授权登录后仍需固定等待有效期结束） 
+
+- fixing
 ```
 
 2.签到
