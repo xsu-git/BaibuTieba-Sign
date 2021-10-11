@@ -186,7 +186,9 @@ def get_bduss():
 
 
 if __name__ == '__main__':
-    bduss = os.environ.get('BDUSS')
+    cookie = os.environ.get('COOKIE')
+    BDUSS = [field.strip() for field in cookie.split(';') if field.strip().startswith('BDUSS=')]
+    bduss = BDUSS[0].replace('BDUSS=','')
     ding_secret = os.environ.get('DINGTALK_SECRET')
     ding_webhook = os.environ.get('DINGTALK_WEBHOOK')
     tieba = Tieba(bduss,ding_secret,ding_webhook)
