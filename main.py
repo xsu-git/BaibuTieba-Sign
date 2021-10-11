@@ -118,6 +118,8 @@ class Tieba():
             return(e)
 
     def send_message(self,message):
+        if self.ding_secret is None or self.ding_webhook is None:
+            return
         timestamp = str(round(time.time() * 1000))
         secret_enc = self.ding_secret.encode('utf-8')
         string_to_sign = '{}\n{}'.format(timestamp, self.ding_secret)
