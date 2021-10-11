@@ -66,6 +66,10 @@
 
 8. 返回钉钉完成即可，由于我们是凌晨签到的，如果害怕大半夜推送打扰到自己，可以把群设置成消息免打扰。
 
+![通知](https://tva1.sinaimg.cn/large/008i3skNgy1gvbeh6sescj60h40ni75w02.jpg)
+
+
+
 ## 重要声明 :loudspeaker:
 该项目开发的初衷是为了学术研究。
 

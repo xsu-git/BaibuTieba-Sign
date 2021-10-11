@@ -6,6 +6,7 @@ name: 百度贴吧自动签到吧
 on:
   schedule:
   - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
