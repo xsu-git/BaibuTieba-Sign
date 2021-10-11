@@ -23,9 +23,12 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Sign In
+      env:
+        COOKIE: ${{secrets.COOKIE}}
+        DINGTALK_SECRET: ${{secrets.DINGTALK_SECRET}}
+        DINGTALK_WEBHOOK: ${{secrets.DINGTALK_WEBHOOK}}
       run: |
           python main.py
 
